@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="css/leaflet-measure.css">
+        <style>
+        #map {
+            width: 1280px;
+            height: 552px;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="js/leaflet-measure.js"></script>
+        <script>
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:28, minZoom:1
+        }).fitBounds([[-35.22013306362293,-59.91001285280285],[-34.2613145988558,-57.28839320751434]]);
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        var measureControl = new L.Control.Measure({
+            position: 'topleft',
+            primaryLengthUnit: 'meters',
+            secondaryLengthUnit: 'kilometers',
+            primaryAreaUnit: 'sqmeters',
+            secondaryAreaUnit: 'hectares'
+        });
+        measureControl.addTo(map);
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .innerHTML = '';
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .className += ' fas fa-ruler';
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+            map.setMaxBounds(map.getBounds());
+        }
+        map.createPane('pane_GoogleSatellite_0');
+        map.getPane('pane_GoogleSatellite_0').style.zIndex = 400;
+        var layer_GoogleSatellite_0 = L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+            pane: 'pane_GoogleSatellite_0',
+            opacity: 1.0,
+            attribution: '',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 19
+        });
+        layer_GoogleSatellite_0;
+        map.addLayer(layer_GoogleSatellite_0);
+        map.createPane('pane_REFERENCELAYER_1');
+        map.getPane('pane_REFERENCELAYER_1').style.zIndex = 401;
+        var img_REFERENCELAYER_1 = 'data/REFERENCELAYER_1.png';
+        var img_bounds_REFERENCELAYER_1 = [[-35.17036631139017,-59.04014661477252],[-34.31532423305818,-58.132998924719956]];
+        var layer_REFERENCELAYER_1 = new L.imageOverlay(img_REFERENCELAYER_1,
+                                              img_bounds_REFERENCELAYER_1,
+                                              {pane: 'pane_REFERENCELAYER_1'});
+        bounds_group.addLayer(layer_REFERENCELAYER_1);
+        map.addLayer(layer_REFERENCELAYER_1);
+        map.createPane('pane_S2_UNET_PREDICTION_2');
+        map.getPane('pane_S2_UNET_PREDICTION_2').style.zIndex = 402;
+        var img_S2_UNET_PREDICTION_2 = 'data/S2_UNET_PREDICTION_2.png';
+        var img_bounds_S2_UNET_PREDICTION_2 = [[-35.170254494,-59.040158251],[-34.315238007,-58.133039477]];
+        var layer_S2_UNET_PREDICTION_2 = new L.imageOverlay(img_S2_UNET_PREDICTION_2,
+                                              img_bounds_S2_UNET_PREDICTION_2,
+                                              {pane: 'pane_S2_UNET_PREDICTION_2'});
+        bounds_group.addLayer(layer_S2_UNET_PREDICTION_2);
+        map.addLayer(layer_S2_UNET_PREDICTION_2);
+        var baseMaps = {};
+        L.control.layers(baseMaps,{"S2_UNET_PREDICTION": layer_S2_UNET_PREDICTION_2,"REFERENCE LAYER": layer_REFERENCELAYER_1,"Google Satellite": layer_GoogleSatellite_0,},{collapsed:false}).addTo(map);
+        setBounds();
+        L.ImageOverlay.include({
+            getBounds: function () {
+                return this._bounds;
+            }
+        });
+        </script>
+    </body>
+</html>
